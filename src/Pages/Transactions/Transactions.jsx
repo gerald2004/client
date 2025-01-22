@@ -10,18 +10,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Individuals } from "./Components/Individuals/Individuals";
 import { Groups } from "./Components/Groups/Groups";
 
-const Clients = () => {
+const Transactions = () => {
   return (
     <>
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink to="/dashboard">Home
-            </BreadcrumbLink>
+            <BreadcrumbLink href="dashboard">Home</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Clients</BreadcrumbPage>
+            <BreadcrumbPage>Transactions</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -29,12 +28,15 @@ const Clients = () => {
         <div className="border-b" />
         <div className="flex-1 space-y-4 p-0 pt-2">
           <div className="flex items-center justify-between space-y-2">
-            <h2 className="text-3xl font-bold tracking-tight">Clients</h2>
+            <h2 className="text-3xl font-bold tracking-tight">My Transactions</h2>
           </div>
           <Tabs defaultValue="individuals" className="space-y-4">
             <TabsList>
-              <TabsTrigger value="individuals">Individuals</TabsTrigger>
-              <TabsTrigger value="groups">Groups</TabsTrigger>
+              <TabsTrigger value="individuals">General Savings</TabsTrigger>
+              <TabsTrigger value="groups">Ussd Savings</TabsTrigger>
+              <TabsTrigger value="individuals">Withdraws</TabsTrigger>
+              <TabsTrigger value="groups">Transfers</TabsTrigger>
+              <TabsTrigger value="individuals">Shares</TabsTrigger>
             </TabsList>
             <TabsContent value="individuals" className="space-y-4">
               <Individuals />
@@ -49,4 +51,4 @@ const Clients = () => {
   );
 };
 
-export default Clients;
+export default Transactions;

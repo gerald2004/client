@@ -40,7 +40,7 @@ export function Individuals() {
   const navigate = useNavigate();
   const [sorting, setSorting] = useState([]);
   const [globalFilter, setGlobalFilter] = useState("");
-  const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 7 });
+  const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
   const axiosPrivate = useAxiosPrivate();
   const [showDialog, setShowDialog] = useState(false);
 
@@ -196,7 +196,6 @@ export function Individuals() {
 
   const exportToCSV = () => {
     const csvData = data?.data.map((row) => ({
-      AccountNumber: row.client_account_number,
       LastName: row.client_lastname,
       FirstName: row.client_firstname,
       Contact: row.client_contact,
@@ -204,7 +203,7 @@ export function Individuals() {
     }));
 
     const csv = [
-      ["Account Number","Last Name", "First Name", "Contact", "Gender"],
+      ["Last Name", "First Name", "Contact", "Gender"],
       ...csvData.map((row) => Object.values(row)),
     ]
       .map((e) => e.join(","))
@@ -214,7 +213,7 @@ export function Individuals() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", `individuals-${Date.now()}.csv`);
+    link.setAttribute("download", "individuals.csv");
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -223,16 +222,15 @@ export function Individuals() {
   const exportToPDF = () => {
     const doc = new jsPDF();
     doc.autoTable({
-      head: [["Account Number","Last Name", "First Name", "Contact", "Gender"]],
+      head: [["Last Name", "First Name", "Contact", "Gender"]],
       body: data?.data.map((row) => [
-        row.client_account_number,
         row.client_lastname,
         row.client_firstname,
         row.client_contact,
         row.client_gender,
       ]),
     });
-    doc.save(`individuals-${Date.now()}.pdf`);
+    doc.save("individuals.pdf");
   };
 
   const renderSkeletonRows = () => {

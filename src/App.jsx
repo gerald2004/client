@@ -11,9 +11,14 @@ import RequireAuth from "./components/RequiredAuth";
 import PersistLogin from "./components/PersistentLogin";
 import Missing from "./Pages/Others/Missing";
 import Unauthorized from "./Pages/Others/Unauthorized";
-import Clients from "./Pages/Clients/Clients";
-import SingleIndividualClient from "./Pages/Clients/Components/Individuals/SingleIndividualClient";
-import ContactList from "./Tests/ContactList";
+import Transactions from "./Pages/Transactions/Transactions";
+import Loans from "./Pages/Loans/Loans";
+import Savings from "./Pages/Savings/Savings";
+import Withdraws from "./Pages/Withdraws/Withdraws";
+import FixedDeposits from "./Pages/FixedDeposits/FixedDeposits";
+import Transfers from "./Pages/Transfers/Transfers";
+import Shares from "./Pages/Shares/Shares";
+import Profile from "./Pages/Auth/Profile";
 function App() {
   return (
     <>
@@ -31,10 +36,14 @@ function App() {
             <Route element={<AuthLayout />}>
               <Route element={<RequireAuth allowedRoles={[1000001]} />}>
                 <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/clients" element={<Clients />} />
-                <Route path="/clients/individual/:id" element={<SingleIndividualClient />} />
-                <Route path="/contacts" element={<ContactList />} />
-
+                <Route path="/transactions" element={<Transactions />} />
+                <Route path="/savings" element={<Savings />} />
+                <Route path="/withdraws" element={<Withdraws />} />
+                <Route path="/fixed-deposits" element={<FixedDeposits />} />
+                <Route path="/transfers" element={<Transfers />} />
+                <Route path="/shares" element={<Shares />} />
+                <Route path="/loans" element={<Loans />} />
+                <Route path="/profile" element={<Profile />} />
               </Route>
             </Route>
           </Route>

@@ -36,24 +36,24 @@ import { ChevronDown } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import AlertModal from "@/components/AlertModal";
 
-export function Groups() {
+export function Individuals() {
   const navigate = useNavigate();
   const [sorting, setSorting] = useState([]);
   const [globalFilter, setGlobalFilter] = useState("");
-  const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 7 });
+  const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
   const axiosPrivate = useAxiosPrivate();
   const [showDialog, setShowDialog] = useState(false);
 
   const { data = [], isLoading, refetch, isRefetching, isError } = useQuery({
     queryKey: [
-      "group-data",
+      "individuals-data",
       pagination.pageIndex,
       pagination.pageSize,
       globalFilter,
       sorting,
     ],
     queryFn: async () => {
-      const fetchURL = `/serverside/clients/group`;
+      const fetchURL = `/serverside/clients/individual`;
       try {
         const response = await axiosPrivate.get(fetchURL, {
           params: {
@@ -106,22 +106,42 @@ export function Groups() {
       ),
     },
     {
-      id: "client_group_name",
-      header: "Group Name",
-      accessorFn: (row) => row.client_group_name,
+      id: "client_lastname",
+      header: "Last Name",
+      accessorFn: (row) => row.client_lastname,
       cell: ({ row }) => (
         <Link
           to={`/clients/individual/${row.original.client_id}`}
           className="capitalize hover:uppercase"
         >
-          {row.original.client_group_name}
+          {row.original.client_lastname}
         </Link>
       ),
     },
-
+    {
+      id: "client_firstname",
+      header: "First Name",
+      accessorFn: (row) => row.client_firstname,
+      cell: ({ row }) => (
+        <Link
+          to={`/clients/individual/${row.original.client_id}`}
+          className="capitalize hover:uppercase"
+        >
+          {row.original.client_firstname}
+        </Link>
+      ),
+    },
     {
       accessorKey: "client_contact",
       header: "Contact",
+    },
+    {
+      id: "client_gender",
+      accessorFn: (row) => row.client_gender,
+      cell: ({ row }) => (
+        <p className="capitalize">{row.original.client_gender}</p>
+      ),
+      header: "Gender",
     },
     {
       id: "actions",
@@ -147,7 +167,7 @@ export function Groups() {
               Copy Client Account
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Link to={`/clients/group/${row.original.client_id}`}>
+              <Link to={`/clients/individual/${row.original.client_id}`}>
                 View Cient Account Summary
               </Link>
             </DropdownMenuItem>
@@ -176,13 +196,14 @@ export function Groups() {
 
   const exportToCSV = () => {
     const csvData = data?.data.map((row) => ({
-      AccountNumber: row.client_account_number,
-      FirstName: row.client_group_name,
+      LastName: row.client_lastname,
+      FirstName: row.client_firstname,
       Contact: row.client_contact,
+      Gender: row.client_gender,
     }));
 
     const csv = [
-      ["Account Number", "Group Name", "Contact"],
+      ["Last Name", "First Name", "Contact", "Gender"],
       ...csvData.map((row) => Object.values(row)),
     ]
       .map((e) => e.join(","))
@@ -192,7 +213,7 @@ export function Groups() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", `group-${Date.now()}.csv`);
+    link.setAttribute("download", "individuals.csv");
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -201,14 +222,15 @@ export function Groups() {
   const exportToPDF = () => {
     const doc = new jsPDF();
     doc.autoTable({
-      head: [["Account Number", "Group Name", "Contact"]],
+      head: [["Last Name", "First Name", "Contact", "Gender"]],
       body: data?.data.map((row) => [
-        row.client_account_number,
-        row.client_group_name,
+        row.client_lastname,
+        row.client_firstname,
         row.client_contact,
+        row.client_gender,
       ]),
     });
-    doc.save(`groups-${Date.now()}.pdf`);
+    doc.save("individuals.pdf");
   };
 
   const renderSkeletonRows = () => {

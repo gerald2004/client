@@ -1,7 +1,7 @@
 import * as React from "react"
 import { ChevronRightIcon, DotsHorizontalIcon } from "@radix-ui/react-icons"
 import { Slot } from "@radix-ui/react-slot"
-import { Link } from "react-router-dom"
+
 import { cn } from "@/lib/utils"
 
 const Breadcrumb = React.forwardRef(
@@ -28,34 +28,17 @@ const BreadcrumbItem = React.forwardRef(({ className, ...props }, ref) => (
 ))
 BreadcrumbItem.displayName = "BreadcrumbItem"
 
-// const BreadcrumbLink = React.forwardRef(({ asChild, className, ...props }, ref) => {
-//   const Comp = asChild ? Slot : "a"
+const BreadcrumbLink = React.forwardRef(({ asChild, className, ...props }, ref) => {
+  const Comp = asChild ? Slot : "a"
 
-//   return (
-//     (<Comp
-//       ref={ref}
-//       className={cn("transition-colors hover:text-foreground", className)}
-//       {...props} />)
-//   );
-// })
-// BreadcrumbLink.displayName = "BreadcrumbLink"
-
-const BreadcrumbLink = React.forwardRef(
-  ({ asChild, className, to = "#", ...props }, ref) => {
-    const Comp = asChild ? Slot : Link; // Use Link instead of a regular anchor tag
-
-    return (
-      <Comp
-        ref={ref}
-        className={`transition-colors hover:text-foreground ${className}`}
-        to={to} // React Router's "to" prop instead of "href"
-        {...props}
-      />
-    );
-  }
-);
+  return (
+    (<Comp
+      ref={ref}
+      className={cn("transition-colors hover:text-foreground", className)}
+      {...props} />)
+  );
+})
 BreadcrumbLink.displayName = "BreadcrumbLink"
-
 
 const BreadcrumbPage = React.forwardRef(({ className, ...props }, ref) => (
   <span

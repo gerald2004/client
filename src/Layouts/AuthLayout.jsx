@@ -62,7 +62,7 @@ const AuthLayout = () => {
 
           <div className=" flex-grow lg:ml-64">
             <div className="sticky top-0 bg-background z-10 flex items-center justify-between p-4">
-              <Menubar className="hidden md:flex">
+              {/* <Menubar className="hidden md:flex">
                 <MenubarMenu>
                   <MenubarTrigger>Clients</MenubarTrigger>
                   <MenubarContent>
@@ -73,7 +73,7 @@ const AuthLayout = () => {
                     <MenubarItem>
                       <Link to="clients">View Clients</Link>
                     </MenubarItem>
-                    {/* <MenubarSeparator /> */}
+                    <MenubarSeparator />
                   </MenubarContent>
                 </MenubarMenu>
                 <Separator orientation="vertical" />
@@ -81,7 +81,7 @@ const AuthLayout = () => {
                 <MenubarMenu>
                   <MenubarTrigger>Savings</MenubarTrigger>
                   <MenubarContent>
-                    {/* <MenubarItem>New Savings</MenubarItem> */}
+                    <MenubarItem>New Savings</MenubarItem>
                     <MenubarItem>View Savings</MenubarItem>
                     <MenubarSeparator />
                     <MenubarItem>School Fees</MenubarItem>
@@ -92,7 +92,7 @@ const AuthLayout = () => {
                 <MenubarMenu>
                   <MenubarTrigger>Withdraws</MenubarTrigger>
                   <MenubarContent>
-                    {/* <MenubarItem>New Withdraws</MenubarItem> */}
+                    <MenubarItem>New Withdraws</MenubarItem>
                     <MenubarItem>View Withdraws</MenubarItem>
                   </MenubarContent>
                 </MenubarMenu>
@@ -101,8 +101,8 @@ const AuthLayout = () => {
                 <MenubarMenu>
                   <MenubarTrigger>Loans</MenubarTrigger>
                   <MenubarContent>
+                    <MenubarItem>New Loan Application</MenubarItem>
                     <MenubarItem>View Loans</MenubarItem>
-                    <MenubarItem>Loan Calculator</MenubarItem>
                   </MenubarContent>
                 </MenubarMenu>
                 <Separator orientation="vertical" />
@@ -121,8 +121,8 @@ const AuthLayout = () => {
                     <MenubarItem>Bulk Email Alerts</MenubarItem>
                   </MenubarContent>
                 </MenubarMenu>
-              </Menubar>
-              <div className="hidden md:flex items-center space-x-4">
+              </Menubar> */}
+              <div className="hidden md:flex items-center space-x-4 ml-auto">
                 <div>
                   <Input
                     type="search"
@@ -171,7 +171,11 @@ const AuthLayout = () => {
                       </Avatar>
                     </MenubarTrigger>
                     <MenubarContent align="end">
-                      <MenubarItem>Profile</MenubarItem>
+                    <MenubarItem>
+                    <Link to="/profile" className="w-full block">
+                      Profile
+                    </Link>
+                    </MenubarItem>
                       <MenubarItem>Settings</MenubarItem>
                       <MenubarSeparator />
                       <MenubarItem>
