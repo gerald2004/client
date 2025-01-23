@@ -19,6 +19,7 @@ import FixedDeposits from "./Pages/FixedDeposits/FixedDeposits";
 import Transfers from "./Pages/Transfers/Transfers";
 import Shares from "./Pages/Shares/Shares";
 import Profile from "./Pages/Auth/Profile";
+import ChangePassword from "./Pages/Auth/ChangePassword";
 function App() {
   return (
     <>
@@ -44,6 +45,7 @@ function App() {
                 <Route path="/shares" element={<Shares />} />
                 <Route path="/loans" element={<Loans />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/change-password" element={<ChangePassword />} />
               </Route>
             </Route>
           </Route>

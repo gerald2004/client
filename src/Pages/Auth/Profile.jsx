@@ -26,7 +26,7 @@ const Profile = ({ className, ...props }) => {
       <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
-                <BreadcrumbLink href="dashboard">Profile</BreadcrumbLink>
+                <BreadcrumbLink href="profile">Profile</BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
