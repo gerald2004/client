@@ -1,4 +1,9 @@
+// import {  useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import useAxiosPrivate from "@/MiddleWares/Hooks/useAxiosPrivate";
 import { Button } from "@/components/ui/button";
+import  useAuth  from "@/MiddleWares/Hooks/useAuth";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,28 +13,39 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CalendarDateRangePicker } from "@/components/date-range-picker";
+// import { CalendarDateRangePicker } from "@/components/date-range-picker";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useState } from "react";
 
 const Dashboard = () => {
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [accounts, setAccounts] = useState([
-    { accountName: "Savings Account", balance: 0 },
-    { accountName: "Total Account", balance: 0 },
-    { accountName: "Investment Account", balance: 0 },
-  ]);
+  const { auth } = useAuth();
+  // console.log(auth);
+  const clientId = auth?.client?.client_id;
+  //console.log(clientId);
+  const axiosPrivate = useAxiosPrivate();
+  const navigate = useNavigate();
+  // const [selectedDate, setSelectedDate] = useState(null);
 
-  // Mock function to fetch updated balances
-  const updateAccountBalances = () => {
-    // Replace with API call
-    const updatedBalances = [
-      { accountName: "Savings Account", balance: 15000 },
-      { accountName: "Total Account", balance: 32000 },
-      { accountName: "Investment Account", balance: 8500 },
-    ];
-    setAccounts(updatedBalances);
-  };
+  const { data: accounts = [], isLoading, refetch } = useQuery({
+    queryKey: ["account-balance", clientId],
+    queryFn: async () => {
+      if (!clientId) return [];
+      try {
+        const response = await axiosPrivate.get(`/client/account/balance/${clientId}`);
+        console.log(response.data.data.accounts);
+        return response.data.data.accounts.map((account) => ({
+          accountName: account.account_name,
+          accountNumber: account.account_number,
+          balance: account.account_balance,
+        }));
+      } catch (error) {
+        if (error?.response?.status === 401) {
+          navigate("/", { state: { from: location }, replace: true });
+        }
+        throw error;
+      }
+    },
+    enabled: !!clientId, // Prevent query from running if clientId is not available
+  });
 
   return (
     <>
@@ -50,11 +66,12 @@ const Dashboard = () => {
           <div className="flex items-center justify-between space-y-2">
             <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
             <div className="flex items-center space-x-2">
-              <CalendarDateRangePicker onChange={setSelectedDate} />
-              <Button onClick={updateAccountBalances}>Update</Button>
+              {/* <CalendarDateRangePicker onChange={setSelectedDate} /> */}
+              <Button onClick={() => refetch()} disabled={isLoading}>
+                {isLoading ? "Updating..." : "Update"}
+              </Button>
             </div>
           </div>
-          {/* Cards for Multiple Accounts */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {accounts.map((account, index) => (
               <Card key={index}>
@@ -63,15 +80,15 @@ const Dashboard = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="text-lg">
-                    As at:{" "}
+                    Acc Number: {" "}
                     <span className="font-medium">
-                      {selectedDate ? selectedDate.toLocaleString() : "Select a date"}
+                      {account.accountNumber}
                     </span>
                   </p>
                   <p className="text-lg">
-                    Balance:{" "}
+                    Balance: {" "}
                     <span className="font-bold text-green-600">
-                      ${account.balance.toLocaleString()}
+                    UGX{" "}{Number(account.balance).toLocaleString("en-US", { minimumFractionDigits: 2 })}
                     </span>
                   </p>
                 </CardContent>
@@ -83,12 +100,6 @@ const Dashboard = () => {
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="loans">Loans</TabsTrigger>
             </TabsList>
-            {/* <TabsContent value="overview" className="space-y-4">
-              <DashboardOverview />
-            </TabsContent>
-            <TabsContent value="loans" className="space-y-4">
-              <DashboardLoans />
-            </TabsContent> */}
           </Tabs>
         </div>
       </div>
