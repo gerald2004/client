@@ -36,7 +36,7 @@ import { ChevronDown } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import AlertModal from "@/components/AlertModal";
 
-export function Individuals() {
+export function IndividualTransfer() {
   const navigate = useNavigate();
   const [sorting, setSorting] = useState([]);
   const [globalFilter, setGlobalFilter] = useState("");

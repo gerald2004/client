@@ -35,14 +35,18 @@ import "jspdf-autotable";
 import { ChevronDown } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import AlertModal from "@/components/AlertModal";
+import useAuth from "@/MiddleWares/Hooks/useAuth";
 
-export function Individuals() {
+export function SavingsIndividuals() {
   const navigate = useNavigate();
   const [sorting, setSorting] = useState([]);
   const [globalFilter, setGlobalFilter] = useState("");
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
   const axiosPrivate = useAxiosPrivate();
   const [showDialog, setShowDialog] = useState(false);
+  const { auth } = useAuth();
+  // console.log(auth);
+  const client_id = auth?.client?.client_id;
 
   const { data = [], isLoading, refetch, isRefetching, isError } = useQuery({
     queryKey: [
@@ -53,7 +57,8 @@ export function Individuals() {
       sorting,
     ],
     queryFn: async () => {
-      const fetchURL = `/serverside/clients/individual`;
+      // const fetchURL = `/serverside/clients/individual`;
+      const fetchURL = `/accounting/individual/deposits/${client_id}`;
       try {
         const response = await axiosPrivate.get(fetchURL, {
           params: {

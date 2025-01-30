@@ -6,7 +6,8 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
   } from "@/components/ui/breadcrumb";
-  import { Individuals } from "../Transactions/Components/Individuals/Individuals";
+import { ShareIndividuals } from "./Components/ShareIndividuals";
+  // import { Individuals } from "../Transactions/Components/Individuals/ClientTransactions";
   const Shares = () => {
     return (
       <>
@@ -28,7 +29,7 @@ import {
               <h2 className="text-3xl font-bold tracking-tight">My Shares</h2>
             </div>
             <div className="space-y-4">
-                <Individuals />
+                <ShareIndividuals />
             </div>
           </div>
         </div>

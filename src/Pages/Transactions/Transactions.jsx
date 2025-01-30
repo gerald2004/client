@@ -7,7 +7,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Individuals } from "./Components/Individuals/Individuals";
+import { ClientTransactions } from "./Components/Individuals/ClientTransactions";
 import { Groups } from "./Components/Groups/Groups";
 
 const Transactions = () => {
@@ -39,7 +39,7 @@ const Transactions = () => {
               <TabsTrigger value="individuals">Shares</TabsTrigger>
             </TabsList>
             <TabsContent value="individuals" className="space-y-4">
-              <Individuals />
+              <ClientTransactions />
             </TabsContent>
             <TabsContent value="groups" className="space-y-4">
               <Groups />

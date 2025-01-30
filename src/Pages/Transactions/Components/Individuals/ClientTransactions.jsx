@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   flexRender,
   getCoreRowModel,
@@ -15,9 +15,9 @@ import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
+  // DropdownMenuItem,
+  // DropdownMenuLabel,
+  // DropdownMenuSeparator,
   DropdownMenuTrigger,
   DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
@@ -35,8 +35,13 @@ import "jspdf-autotable";
 import { ChevronDown } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import AlertModal from "@/components/AlertModal";
+import  useAuth  from "@/MiddleWares/Hooks/useAuth";
 
-export function Individuals() {
+export function ClientTransactions() {
+  // const { client_id } = useParams();
+  const { auth } = useAuth();
+// console.log(auth);
+const client_id = auth?.client?.client_id;
   const navigate = useNavigate();
   const [sorting, setSorting] = useState([]);
   const [globalFilter, setGlobalFilter] = useState("");
@@ -44,16 +49,17 @@ export function Individuals() {
   const axiosPrivate = useAxiosPrivate();
   const [showDialog, setShowDialog] = useState(false);
 
-  const { data = [], isLoading, refetch, isRefetching, isError } = useQuery({
+  const { data = {}, isLoading, refetch, isRefetching, isError } = useQuery({
     queryKey: [
-      "individuals-data",
+      "client-transactions",
+      client_id,
       pagination.pageIndex,
       pagination.pageSize,
       globalFilter,
       sorting,
     ],
     queryFn: async () => {
-      const fetchURL = `/serverside/clients/individual`;
+      const fetchURL = `/accounting/individual/deposits/${client_id}`;
       try {
         const response = await axiosPrivate.get(fetchURL, {
           params: {
@@ -63,10 +69,10 @@ export function Individuals() {
             sorting: JSON.stringify(sorting || []),
           },
         });
-        return response.data.data ?? [];
+        return response.data ?? {};
       } catch (error) {
         if (error?.response?.status === 401) {
-           navigate("/", { state: { from: location }, replace: true });
+          navigate("/", { state: { from: location }, replace: true });
         }
         return error;
       }
@@ -93,93 +99,50 @@ export function Individuals() {
       ),
     },
     {
-      id: "client_account_number",
+      id: "amount",
+      header: "Amount",
+      accessorFn: (row) => row.amount,
+    },
+    {
+      id: "code",
+      header: "Code",
+      accessorFn: (row) => row.code,
+    },
+    {
+      id: "method",
+      header: "Method",
+      accessorFn: (row) => row.method,
+    },
+    {
+      id: "status",
+      header: "Status",
+      accessorFn: (row) => row.status,
+    },
+    {
+      id: "account",
+      header: "Account",
+      accessorFn: (row) => row.account,
+    },
+    {
+      id: "account_name",
+      header: "Account Name",
+      accessorFn: (row) => row.account_name,
+    },
+    {
+      id: "account_number",
       header: "Account Number",
-      accessorFn: (row) => row.client_account_number,
-      cell: ({ row }) => (
-        <Link
-          to={`/clients/individual/${row.original.client_id}`}
-          className="capitalize hover:uppercase"
-        >
-          {row.original.client_account_number}
-        </Link>
-      ),
+      accessorFn: (row) => row.account_number,
     },
     {
-      id: "client_lastname",
-      header: "Last Name",
-      accessorFn: (row) => row.client_lastname,
-      cell: ({ row }) => (
-        <Link
-          to={`/clients/individual/${row.original.client_id}`}
-          className="capitalize hover:uppercase"
-        >
-          {row.original.client_lastname}
-        </Link>
-      ),
-    },
-    {
-      id: "client_firstname",
-      header: "First Name",
-      accessorFn: (row) => row.client_firstname,
-      cell: ({ row }) => (
-        <Link
-          to={`/clients/individual/${row.original.client_id}`}
-          className="capitalize hover:uppercase"
-        >
-          {row.original.client_firstname}
-        </Link>
-      ),
-    },
-    {
-      accessorKey: "client_contact",
-      header: "Contact",
-    },
-    {
-      id: "client_gender",
-      accessorFn: (row) => row.client_gender,
-      cell: ({ row }) => (
-        <p className="capitalize">{row.original.client_gender}</p>
-      ),
-      header: "Gender",
-    },
-    {
-      id: "actions",
-      header: "Actions",
-      cell: ({ row }) => (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              ...
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() =>
-                navigator.clipboard.writeText(
-                  row.original.client_account_number
-                )
-              }
-            >
-              Copy Client Account
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link to={`/clients/individual/${row.original.client_id}`}>
-                View Cient Account Summary
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      ),
-    },
+      id: "timestamp",
+      header: "Timestamp",
+      accessorFn: (row) => row.timestamp,
+    }
   ];
 
   const table = useReactTable({
-    data: data?.data || [],
-    rowCount: data?.meta?.totalRowCount,
+    data: data?.data?.transactions || [],
+    rowCount: data?.data?.rows_returned,
     columns,
     manualPagination: true,
     manualSorting: true,
@@ -195,15 +158,29 @@ export function Individuals() {
   });
 
   const exportToCSV = () => {
-    const csvData = data?.data.map((row) => ({
-      LastName: row.client_lastname,
-      FirstName: row.client_firstname,
-      Contact: row.client_contact,
-      Gender: row.client_gender,
+    const csvData = data?.data?.transactions.map((row) => ({
+      Amount: row.amount,
+      Code: row.code,
+      Method: row.method,
+      Status: row.status,
+      Account: row.account,
+      AccountName: row.account_name,
+      AccountNumber: row.account_number,
+      Timestamp: row.timestamp,
+      
     }));
 
     const csv = [
-      ["Last Name", "First Name", "Contact", "Gender"],
+      [
+        "Amount",
+        "Code",
+        "Method",
+        "Status",
+        "Account",
+        "AccountName",
+        "AccountNumber",
+        "Timestamp",
+      ],
       ...csvData.map((row) => Object.values(row)),
     ]
       .map((e) => e.join(","))
@@ -213,7 +190,7 @@ export function Individuals() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", "individuals.csv");
+    link.setAttribute("download", "transactions.csv");
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -222,15 +199,30 @@ export function Individuals() {
   const exportToPDF = () => {
     const doc = new jsPDF();
     doc.autoTable({
-      head: [["Last Name", "First Name", "Contact", "Gender"]],
-      body: data?.data.map((row) => [
-        row.client_lastname,
-        row.client_firstname,
-        row.client_contact,
-        row.client_gender,
+      head: [
+        [
+          "Amount",
+          "Code",
+          "Method",
+          "Status",
+          "Account",
+          "AccountName",
+          "AccountNumber",
+          "Timestamp",
+        ],
+      ],
+      body: data?.data?.transactions.map((row) => [
+        row.amount,
+        row.code,
+        row.method,
+        row.status,
+        row.account,
+        row.account_name,
+        row.account_number,
+        row.timestamp,
       ]),
     });
-    doc.save("individuals.pdf");
+    doc.save("transactions.pdf");
   };
 
   const renderSkeletonRows = () => {
@@ -257,7 +249,7 @@ export function Individuals() {
     <div className="w-full">
       <div className="flex items-center py-4 space-x-4">
         <Input
-          placeholder="Search clients..."
+          placeholder="Search transactions..."
           value={globalFilter}
           onChange={(event) => setGlobalFilter(event.target.value)}
           className="max-w-sm"
@@ -266,14 +258,14 @@ export function Individuals() {
         <Button
           variant="outline"
           size="sm"
-          onClick={() => exportToCSV(data?.data)}
+          onClick={() => exportToCSV(data?.data?.transactions)}
         >
           Export to CSV
         </Button>
         <Button
           variant="outline"
           size="sm"
-          onClick={() => exportToPDF(data?.data)}
+          onClick={() => exportToPDF(data?.data?.transactions)}
         >
           Export to PDF
         </Button>
@@ -380,7 +372,7 @@ export function Individuals() {
                   Error Loading Data
                 </TableCell>
               </TableRow>
-            ) : data?.data?.length ? (
+            ) : data?.data?.transactions?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
@@ -427,7 +419,7 @@ export function Individuals() {
             }))
           }
           disabled={
-            (data?.meta?.totalRowCount || 0) <=
+            (data?.data?.rows_returned || 0) <=
               (pagination.pageIndex + 1) * pagination.pageSize || isLoading
           }
         >

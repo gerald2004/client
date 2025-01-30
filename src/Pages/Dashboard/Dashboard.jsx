@@ -81,7 +81,7 @@ const Dashboard = () => {
                 <CardContent>
                   <p className="text-lg">
                     Acc Number: {" "}
-                    <span className="font-medium">
+                    <span className="font-small">
                       {account.accountNumber}
                     </span>
                   </p>
