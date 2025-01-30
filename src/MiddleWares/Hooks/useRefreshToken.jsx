@@ -19,8 +19,8 @@ const useRefreshToken = () => {
         ...prev,
         sessionid: response.data.data.sessionId,
         accessToken: response.data.data.accessToken,
-        roles: response.data.data.roles,
-        user: response.data.data.user,
+        // roles: response.data.data.roles,
+        client: response.data.data.client,
       };
     });
     return response.data.accessToken;

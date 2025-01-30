@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "@/Config/Axios";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import PropTypes from "prop-types";
 import { Input } from "@/components/ui/input";
@@ -24,7 +24,7 @@ const Login = ({ className, ...props }) => {
   const location = useLocation();
   const { setAuth } = useAuth();
   const [disabled, setDisabled] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  // const [showPassword, setShowPassword] = useState(false);
 
   const from = location.state?.from?.pathname || "/verify";
   const {
@@ -33,9 +33,9 @@ const Login = ({ className, ...props }) => {
     formState: { errors },
   } = useForm();
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
+  // const togglePasswordVisibility = () => {
+  //   setShowPassword(!showPassword);
+  // };
 
   const onLoginAction = async (data) => {
     try {
@@ -46,11 +46,14 @@ const Login = ({ className, ...props }) => {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       });
+      console.log(response);
       const accessToken = response?.data?.data?.accessToken;
+      console.log(accessToken);
       const sessionid = response?.data?.data?.sessionId;
-      const roles = response?.data?.data?.roles;
-      const user = response?.data?.data?.user;
-      setAuth({ sessionid, accessToken, roles, user });
+      console.log(sessionid);
+      const client= response?.data?.data?.client;
+      console.log(client);
+      setAuth({ sessionid, accessToken, client });
       navigate(from, { replace: true });
     } catch (error) {
       console.error(error);
@@ -80,7 +83,7 @@ const Login = ({ className, ...props }) => {
           <div className="relative z-20 mt-auto">
             <blockquote className="space-y-2">
               <footer className="text-sm">
-                Powered by Mobitungo © 2024 Ahuriire (U) LTD
+                Powered by Mobitungo © 2025 Ahuriire (U) LTD
               </footer>
             </blockquote>
           </div>
@@ -92,7 +95,7 @@ const Login = ({ className, ...props }) => {
               <CardHeader>
                 <CardTitle className="text-2xl">Login</CardTitle>
                 <CardDescription>
-                  Enter your email below to login to your account
+                  Enter your account number below to login to your account
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -103,24 +106,24 @@ const Login = ({ className, ...props }) => {
                   >
                     <div className="grid gap-2">
                       <div className="grid gap-1">
-                        <Label htmlFor="email">Email</Label>
+                        <Label htmlFor="account_number">Account Number</Label>
                         <Input
-                          id="email"
-                          placeholder="name@example.com"
-                          type="email"
+                          id="account_number"
+                          placeholder="100200300"
+                          type="number"
                           autoCapitalize="none"
                           autoComplete="off"
                           autoCorrect="off"
                           disabled={disabled}
-                          {...register("username", { required: true })}
+                          {...register("account_number", { required: true })}
                         />
-                        {errors.username && (
+                        {errors.account_number && (
                           <p className="text-red-600 text-sm">
-                            Email is required
+                            Account Number is required
                           </p>
                         )}
                       </div>
-                      <div className="grid gap-1 relative">
+                      {/* <div className="grid gap-1 relative">
                         <div className="flex items-center">
                           <Label htmlFor="password">Password</Label>
                           <Link
@@ -156,7 +159,7 @@ const Login = ({ className, ...props }) => {
                             Password is required
                           </p>
                         )}
-                      </div>
+                      </div> */}
                       <Button disabled={disabled}>
                         {disabled && (
                           <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />

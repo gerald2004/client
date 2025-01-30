@@ -1,7 +1,5 @@
 import {
   GalleryVerticalEnd,
-  Settings,
-  Settings2,
   SquareTerminal,
   Users,
   PiggyBank,
@@ -9,15 +7,7 @@ import {
   ArrowDownFromLine,
   Rotate3d,
   Tangent,
-  FileDigit,
-  NotebookTabs,
-  GraduationCap,
-  Hash,
-  ChartCandlestick,
   SquareSquare,
-  BadgeDollarSign,
-  AudioLines,
-  Target,
   MessagesSquare,
   AtSign,
   Drill,
@@ -45,24 +35,22 @@ import { NavSingle } from "./nav-single";
 
 export function AppSidebar({ ...props }) {
   const { auth } = useAuth();
-  const initials = `${auth?.user?.firstname?.[0] || ""}${
-    auth?.user?.lastname?.[0] || ""
+  const initials = `${auth?.client?.firstname?.[0]} ${auth?.client?.lastname?.[0]
   }`.toUpperCase();
 
   const data = {
     user: {
-      name: `${auth?.user?.firstname} ${auth?.user?.lastname}`,
-      email: auth?.user?.email,
+      name: `${auth?.client?.firstname} ${auth?.client?.lastname}`,
+      email: auth?.client?.email,
       avatar: "/avatars/shadcn.jpg",
       initials: initials,
-      contact: auth?.user?.contact,
-      role: auth?.user?.role,
+      contact: auth?.client?.contact,
     },
     teams: [
       {
-        name: auth?.user?.sacco,
+        name: auth?.client?.sacco,
         logo: GalleryVerticalEnd,
-        plan: auth?.user?.branch,
+        plan: auth?.client?.branch,
       },
     ],
     settings: {

@@ -7,12 +7,10 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CalendarDateRangePicker } from "@/components/date-range-picker";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useState } from "react";
-import DashboardOverview from "./components/DashboardOverview";
-import DashboardLoans from "./components/DashboardLoans";
 
 const Dashboard = () => {
   const [selectedDate, setSelectedDate] = useState(null);
@@ -85,12 +83,12 @@ const Dashboard = () => {
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="loans">Loans</TabsTrigger>
             </TabsList>
-            <TabsContent value="overview" className="space-y-4">
+            {/* <TabsContent value="overview" className="space-y-4">
               <DashboardOverview />
             </TabsContent>
             <TabsContent value="loans" className="space-y-4">
               <DashboardLoans />
-            </TabsContent>
+            </TabsContent> */}
           </Tabs>
         </div>
       </div>
